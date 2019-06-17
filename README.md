@@ -2,10 +2,9 @@
 
 SNAPP sequencing data pipeline to produce haplotypes from targeted amplicon sequencing
 
-##Overall sequencing data processing. 
+## Overall sequencing data processing. 
 
 Raw sequencing data (Unpaired reads)   -->  Haplotypes per sample (Sequence and frequency)
-
 
 ### Considerations
 
@@ -16,25 +15,8 @@ Raw sequencing data (Unpaired reads)   -->  Haplotypes per sample (Sequence and 
 	• High read depth. 
 	• High number of PCR rounds =  High number of PCR errors and increased variability between replicas.
 	• Variable initial sample size: Variable viral load at different sampling points in time and fluid. 
-	
-	
-### Pipeline
 
-#### Paired reads merging - PEAR
-For each replicate, their paired reads are merged using PEAR. A software that takes into account the overlapping region as well as the quality scores on the bases located in such region. The merging was performed under default parameters.
-
-`pear -f  sam1_rep1_R1_001.fastq.gz  -r  sam1_rep1_R2_001.fastq.gz -o  sam1_rep1`
-
-#### Fragments quality filtering - Seek Deep Extractor
-Fragments are now filter to exclude those with low quality scores and sequences whose ends doesn't match the primers sequences employed for amplification. 
-The following parameters were used for all the samples. 
-
-`seekdeep extractor -fastq  sam1_rep1_pear.fastq -id  gene.id  -checkComplement -qualCheck 25 -qualCheckCutOff .75 -variableStart 20 -minLen 350 -maxLen 450 --overWriteDir -dout  sam1_rep1`
-
-#### Haplotypes calculation - Seek Deep Qluster
-The filtered fragments from each replicate are now collapsed.  Each unique sequence is associated with their respective number of reads that belong to it. After sorting such clusters by their number of reads a collapsing iteration is performed. Low frequency clusters are compared against more abundant clusters if their sequence only diverge in 1 base and such base is located in a low quality region, the small cluster is added to the major one.  The final clusters are considered afterwards as haplotypes. 
-
-`seekdeep qluster -fastq sam1_rep1_sd_extractor/gene.fastq  -par ./tabs/illumina_lkmer2 --overWriteDir --noHomopolymerWeighting  -dout  sam1/rep1`
+The code in this repository does the last step in the complete pipeline, which is haplotypes consolidation.  You can find the complete pipeline description in the wiki section. 
 
 #### Haplotypes consolidation - Merging replicates data for each sample
 
