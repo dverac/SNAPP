@@ -32,7 +32,7 @@ hap_summary = function(summ_dir, gene='gB', ref_strains = NULL){  ##  New format
   #### refs -> DNAStringSet with reference sequences.
   ## Returns best reference strain name for each haplotype.
   assign_strain = function(seqs = NULL, rf = NULL){
-    library(ape)
+    library(ape); library(Biostrings)
     if(is.null(seqs) & is.null(refs)) stop('Incorrect input data')
     
     ln = min(width(seqs)[1], width(rf)[1])
@@ -119,6 +119,7 @@ hap_summary = function(summ_dir, gene='gB', ref_strains = NULL){  ##  New format
   data = data.frame() ## Load data per sample.
   for(i in d)   data = rbind(data, read.csv(i, stringsAsFactors = F) )
   data$gene = gene
+  data$id = data$ix
   data$ix = paste(data$ix, gene, sep='-')
   data$seq = factor(data$seq)
   
@@ -156,6 +157,14 @@ hap_summary = function(summ_dir, gene='gB', ref_strains = NULL){  ##  New format
   data$strain = sapply(data$hap, function(i) h_ix$strain[h_ix$hap==i])
   data = data[order(data$strain, data$ix),] ## Sorting data by strains and frequency.
   
+  ## Add strain fraction to dsum. 
+  freq_cols = paste('freq', names(refs), sep ='_')
+  dsum[,freq_cols] = 0
+  for(i in 1:nrow(dsum)){
+    tmp = subset(data, id == dsum$id[i])
+    dsum[i, freq_cols] = sapply(names(refs), function(strain) sum(tmp$read_adj_frac[tmp$strain == strain]) )
+  }
+  
   #############
   ## 5. Contaminants & recombinants 
   #############
@@ -172,11 +181,12 @@ hap_summary = function(summ_dir, gene='gB', ref_strains = NULL){  ##  New format
   ## Also take out samples that are way too far away from the reference. -> Spurious haplotypes. 
   h_ix$filter[h_ix$dist > ceiling(max(h_ix$range)/2)] = 'Spurious'
   
+  
+  
   ### Recombinants -> Only using the canonical sequence as parentals.
   ref_haps = as.character(h_ix$hap[h_ix$dist == 0])
   names(ref_haps) = sapply(ref_haps, function(i) h_ix$strain[h_ix$hap == i])
-  
-   if(length(ref_haps) > 0){
+  if(length(ref_haps) > 0){
     chim = find_chimeras(seqs[ subset(h_ix, (dist > 1 & is.na(filter)) | dist == 0 )$hap ], ref_haps)
     pot_chim  = chim$hap[chim$d_novo == 0]
     h_ix$filter[h_ix$hap %in% pot_chim] = 'chimera'
