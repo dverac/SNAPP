@@ -438,7 +438,7 @@ process_qlusters = function(w_dir, subset_dir, gene, summ_dir = 'summary', cut_o
       
       data = data[order(data$read_num, decreasing=T),]
       data$read_adj_frac = data$read_num / sum(data$read_num)
-      pq_file = file.path(w_dir, summ_dir, gene, names(ix)[s]) %>% gsub(pattern = '$', replacement = '.csv')
+      pq_file = file.path(w_dir, summ_dir, gene, 'pq', names(ix)[s]) %>% gsub(pattern = '$', replacement = '.csv')
       write.csv(data, pq_file, row.names=F)
     }else{
       ## Worst case scenario... Negative correlation in the only pair or even best pair. 
