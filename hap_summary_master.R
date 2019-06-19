@@ -197,4 +197,7 @@ hap_summary = function(summ_dir, gene='gB', ref_strains = NULL){  ##  New format
   write.csv(h_ix, paste(summ_dir,'/h_ix_',gene,'.csv',sep=''), row.names=F)
   write.csv(dsum, paste(summ_dir,'/dsum_',gene,'.csv',sep=''), row.names=F)
   writeXStringSet(seqs, paste(summ_dir,'/seqs_',gene,'.fa',sep=''))
+                           
+  save(data, h_ix, dsum, refs, seqs, file = paste(summ_dir,'/db_',gene,'.RData',sep=''))
+
 }
