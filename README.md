@@ -29,9 +29,10 @@ Check process_qlusters_master.R code for this step.
 #### Database for a set of samples 
 
 Given a collection of samples intended to be analyzed together, we gather all the haplotype information at a given gene for all those samples and condense them in 4 major structures:  
-	• data = data.frame that includes all the haplotypes and their observed frequencies in each sample.   
-	• dsum = data.frame with summary data for each sample, including total number of haplotypes, relative frequencies given a set of refrence strains and total reads supporting the sample.   
-	• h_ix = data.frame for the haplotypes catalog, each unique haplotype found in the collection has a entry with information of number of samples where shouch ahpltoype was found, reference strain, number of nucleotides of difference against reference strain and statstitcis about its relative frequency in the samples.  
-	• seqs = DNAStringSet with all the sequences of each unique haplotype, named using the haplotype ID and same order as h_ix.   
+	• **data** = *data.frame* that includes all the haplotypes and their observed frequencies in each sample.   
+	• **dsum** = *data.frame* with summary data for each sample, including total number of haplotypes, relative frequencies given a set of refrence strains and total reads supporting the sample.   
+	• **h_ix** = *data.frame* for the haplotypes catalog, each unique haplotype found in the collection has a entry with information of number of samples where shouch ahpltoype was found, reference strain, number of nucleotides of difference against reference strain and statstitcis about its relative frequency in the samples.  
+	• **seqs** = *DNAStringSet* with all the sequences of each unique haplotype, named using the haplotype ID and same order as h_ix.   
 	  
 Check hap_summary_master.R for this part (Pending...)
+
