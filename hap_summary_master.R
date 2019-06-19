@@ -148,7 +148,7 @@ hap_summary = function(summ_dir, gene='gB', ref_strains = NULL){  ##  New format
   ## 4. Loading strains and assigning them to each haplotype & filtering  
   #############
   refs = readDNAStringSet(ref_strains)
-  h_ix = data.frame(h_ix, assign_strain(seqs, rf) ) ## Since sequences are not crop to the CDS region.
+  h_ix = data.frame(h_ix, assign_strain(seqs, refs) ) ## Since sequences are not crop to the CDS region.
   cols = sapply(names(refs), grep, names(h_ix), value = T) ## Cols names for distance to each of the reference strains. 
   h_ix$range = sapply(1:nrow(h_ix), function(i) max(h_ix[i,cols]) - min(h_ix[i,cols]) )
   
