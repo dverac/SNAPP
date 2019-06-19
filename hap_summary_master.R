@@ -176,10 +176,11 @@ hap_summary = function(summ_dir, gene='gB', ref_strains = NULL){  ##  New format
   ref_haps = as.character(h_ix$hap[h_ix$dist == 0])
   names(ref_haps) = sapply(ref_haps, function(i) h_ix$strain[h_ix$hap == i])
   
-  chim = find_chimeras(seqs[ subset(h_ix, (dist > 1 & is.na(filter)) | dist == 0 )$hap ], ref_haps)
-  
-  pot_chim  = chim$hap[chim$d_novo == 0]
-  h_ix$filter[h_ix$hap %in% pot_chim] = 'chimera'
+   if(length(ref_haps) > 0){
+    chim = find_chimeras(seqs[ subset(h_ix, (dist > 1 & is.na(filter)) | dist == 0 )$hap ], ref_haps)
+    pot_chim  = chim$hap[chim$d_novo == 0]
+    h_ix$filter[h_ix$hap %in% pot_chim] = 'chimera'
+  }
   
   ### STORING DATA. 
   write.csv(data, paste(summ_dir,'/data_',gene,'.csv',sep=''), row.names=F)
